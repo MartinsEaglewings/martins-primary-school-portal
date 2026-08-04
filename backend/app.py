@@ -25,7 +25,7 @@ init_db()
 
 # Official Contact Details for Priceless Grace Academy
 SCHOOL_NAME = "Priceless Grace Academy"
-SCHOOL_ADDRESS = "Priceless Grace Academy Campus, Victoria Island / Ikeja Axis, Lagos State, Nigeria"
+SCHOOL_ADDRESS = "Winners, Atan, Ogun state"
 PHONE_NUMBER = "07042695260"
 WHATSAPP_NUMBER = "2347042695260"
 SCHOOL_EMAIL = "pricelessgraceacademy@gmail.com"
