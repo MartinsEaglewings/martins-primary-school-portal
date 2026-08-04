@@ -244,5 +244,115 @@
     </div>
 
     <script src="/static/js/app.js"></script>
+
+<script>
+// Direct modal control functions attached directly to window
+function openModal(id) {
+    var m = document.getElementById(id);
+    if (m) m.style.display = "flex";
+}
+
+function closeModal(el) {
+    var m = el.closest(".modal-screen");
+    if (m) m.style.display = "none";
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    // Attach click listeners to all buttons with data-target
+    document.querySelectorAll("[data-target]").forEach(function(btn) {
+        btn.addEventListener("click", function(e) {
+            e.preventDefault();
+            var target = btn.getAttribute("data-target");
+            openModal(target);
+        });
+    });
+
+    // Attach click listeners to close buttons
+    document.querySelectorAll(".btn-close").forEach(function(btn) {
+        btn.addEventListener("click", function(e) {
+            e.preventDefault();
+            closeModal(btn);
+        });
+    });
+
+    // Handle Registration Submit
+    var regForm = document.getElementById("form-register");
+    if (regForm) {
+        regForm.onsubmit = function(e) {
+            e.preventDefault();
+            var formData = new FormData(regForm);
+            var payload = {
+                full_name: formData.get("full_name"),
+                username: formData.get("username"),
+                email: formData.get("email"),
+                password: formData.get("password"),
+                role: formData.get("role") || "student"
+            };
+
+            fetch("/api/auth/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                if (data.status === "success") {
+                    alert("Account created successfully! You can now sign in.");
+                    document.getElementById("modal-register").style.display = "none";
+                    regForm.reset();
+                } else {
+                    alert("Registration failed: " + (data.message || "Unknown error"));
+                }
+            })
+            .catch(function(err) {
+                console.error(err);
+                alert("Network error. Please try again.");
+            });
+        };
+    }
+
+    // Handle Login Submit
+    var loginForm = document.getElementById("form-login");
+    if (loginForm) {
+        loginForm.onsubmit = function(e) {
+            e.preventDefault();
+            var formData = new FormData(loginForm);
+            var payload = {
+                username: formData.get("email"),
+                email: formData.get("email"),
+                password: formData.get("password")
+            };
+
+            fetch("/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                if (data.status === "success") {
+                    alert("Signed in successfully!");
+                    if (data.token) localStorage.setItem("token", data.token);
+                    document.getElementById("modal-login").style.display = "none";
+                    loginForm.reset();
+
+                    if (data.user && (data.user.role === "teacher" || data.user.role === "admin")) {
+                        openModal("modal-admin-dashboard");
+                    } else {
+                        openModal("modal-student-dashboard");
+                    }
+                } else {
+                    alert("Login failed: " + (data.message || "Invalid credentials"));
+                }
+            })
+            .catch(function(err) {
+                console.error(err);
+                alert("Network error. Please try again.");
+            });
+        };
+    }
+});
+</script>
 </body>
+
 </html>
