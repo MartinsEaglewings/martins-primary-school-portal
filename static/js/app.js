@@ -1,26 +1,53 @@
-document.addEventListener("DOMContentLoaded", () => {
-    // Modal toggle handlers
-    document.querySelectorAll("[data-target]").forEach(btn => {
-        btn.addEventListener("click", () => {
-            const targetId = btn.getAttribute("data-target");
-            const modal = document.getElementById(targetId);
-            if (modal) modal.style.display = "flex";
-        });
+window.addEventListener("DOMContentLoaded", function() {
+    console.log("Portal script loaded successfully.");
+
+    // --- MODAL TOGGLERS ---
+    // Open Modals
+    document.querySelectorAll("[data-target]").forEach(function(btn) {
+        btn.onclick = function(e) {
+            e.preventDefault();
+            var targetId = btn.getAttribute("data-target");
+            var modal = document.getElementById(targetId);
+            if (modal) {
+                modal.style.display = "flex";
+            } else {
+                console.error("Modal not found:", targetId);
+            }
+        };
     });
 
-    document.querySelectorAll(".btn-close").forEach(btn => {
-        btn.addEventListener("click", () => {
-            btn.closest(".modal-screen").style.display = "none";
-        });
+    // Close Modals
+    document.querySelectorAll(".btn-close").forEach(function(btn) {
+        btn.onclick = function(e) {
+            e.preventDefault();
+            var modal = btn.closest(".modal-screen");
+            if (modal) modal.style.display = "none";
+        };
     });
+
+    // Toggle Teacher PIN passkey field in register modal
+    var regRoleSelect = document.getElementById("reg-role");
+    var pinContainer = document.getElementById("pin-container");
+    if (regRoleSelect && pinContainer) {
+        regRoleSelect.onchange = function() {
+            if (regRoleSelect.value === "teacher") {
+                pinContainer.style.display = "block";
+            } else {
+                pinContainer.style.display = "none";
+            }
+        };
+    }
+
+    // --- FORM SUBMISSIONS ---
 
     // Handle Registration
-    const regForm = document.getElementById("form-register");
+    var regForm = document.getElementById("form-register");
     if (regForm) {
-        regForm.addEventListener("submit", async (e) => {
+        regForm.onsubmit = async function(e) {
             e.preventDefault();
-            const formData = new FormData(regForm);
-            const payload = {
+            
+            var formData = new FormData(regForm);
+            var payload = {
                 full_name: formData.get("full_name"),
                 username: formData.get("username"),
                 email: formData.get("email"),
@@ -30,66 +57,72 @@ document.addEventListener("DOMContentLoaded", () => {
             };
 
             try {
-                const res = await fetch("/api/auth/register", {
+                var res = await fetch("/api/auth/register", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(payload)
                 });
-                const data = await res.json();
+                var data = await res.json();
 
                 if (res.ok && data.status === "success") {
                     alert("Account created successfully! You can now sign in.");
-                    document.getElementById("modal-register").style.display = "none";
+                    var modal = document.getElementById("modal-register");
+                    if (modal) modal.style.display = "none";
                     regForm.reset();
                 } else {
                     alert("Registration failed: " + (data.message || "Unknown error"));
                 }
             } catch (err) {
                 console.error("Register Error:", err);
-                alert("Network error. Please check connection and try again.");
+                alert("Network error. Please check backend server connection.");
             }
-        });
+        };
     }
 
     // Handle Login
-    const loginForm = document.getElementById("form-login");
+    var loginForm = document.getElementById("form-login");
     if (loginForm) {
-        loginForm.addEventListener("submit", async (e) => {
+        loginForm.onsubmit = async function(e) {
             e.preventDefault();
-            const formData = new FormData(loginForm);
-            const payload = {
+
+            var formData = new FormData(loginForm);
+            var payload = {
                 email: formData.get("email"),
-                username: formData.get("email"), // fallbacks for backend
+                username: formData.get("email"),
                 password: formData.get("password")
             };
 
             try {
-                const res = await fetch("/api/auth/login", {
+                var res = await fetch("/api/auth/login", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(payload)
                 });
-                const data = await res.json();
+                var data = await res.json();
 
                 if (res.ok && data.status === "success") {
                     alert("Signed in successfully!");
-                    localStorage.setItem("token", data.token);
-                    document.getElementById("modal-login").style.display = "none";
+                    if (data.token) localStorage.setItem("token", data.token);
+                    
+                    var modal = document.getElementById("modal-login");
+                    if (modal) modal.style.display = "none";
                     loginForm.reset();
 
-                    // Open student or admin dashboard
+                    // Open Dashboard based on role
                     if (data.user && (data.user.role === "teacher" || data.user.role === "admin")) {
-                        document.getElementById("modal-admin-dashboard").style.display = "flex";
+                        var adminDash = document.getElementById("modal-admin-dashboard");
+                        if (adminDash) adminDash.style.display = "flex";
                     } else {
-                        document.getElementById("modal-student-dashboard").style.display = "flex";
+                        var studentDash = document.getElementById("modal-student-dashboard");
+                        if (studentDash) studentDash.style.display = "flex";
                     }
                 } else {
                     alert("Login failed: " + (data.message || "Invalid credentials"));
                 }
             } catch (err) {
                 console.error("Login Error:", err);
-                alert("Network error. Please check connection and try again.");
+                alert("Network error. Please check backend server connection.");
             }
-        });
+        };
     }
 });
