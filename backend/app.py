@@ -1,7 +1,6 @@
 import os
 import sys
 
-# Ensure backend directory is in Python path for smooth imports
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 if BASE_DIR not in sys.path:
     sys.path.insert(0, BASE_DIR)
@@ -28,7 +27,6 @@ SECRET_KEY = "priceless_grace_secret_key"
 UPLOAD_FOLDER = os.path.join(PROJECT_ROOT, "uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-# Initialize database
 init_db()
 
 SCHOOL_NAME = "Priceless Grace Academy"
@@ -70,20 +68,27 @@ def register():
 
     db = SessionLocal()
     try:
-        existing_user = db.query(User).filter(
-            or_(
-                func.lower(User.username) == username.lower(),
-                func.lower(User.email) == email.lower() if email else False
-            )
-        ).first()
+        # Check if user exists safely
+        if hasattr(User, 'email'):
+            existing_user = db.query(User).filter(
+                or_(
+                    func.lower(User.username) == username.lower(),
+                    func.lower(User.email) == email.lower() if email else False
+                )
+            ).first()
+        else:
+            existing_user = db.query(User).filter(func.lower(User.username) == username.lower()).first()
 
         if existing_user:
             return jsonify({"status": "error", "message": "Account with this Username or Email already exists"}), 400
 
-        new_user = User(username=username, email=email, password=password, role=role)
+        if hasattr(User, 'email'):
+            new_user = User(username=username, email=email, password=password, role=role)
+        else:
+            new_user = User(username=username, password=password, role=role)
+
         db.add(new_user)
         db.commit()
-        print(f"[REGISTER SUCCESS] Created user: '{username}', role: '{role}'")
         return jsonify({"status": "success", "message": "Account created successfully!"})
     except Exception as e:
         db.rollback()
@@ -106,12 +111,15 @@ def login():
 
     db = SessionLocal()
     try:
-        user = db.query(User).filter(
-            or_(
-                func.lower(User.username) == identifier.lower(),
-                func.lower(User.email) == identifier.lower()
-            )
-        ).first()
+        if hasattr(User, 'email'):
+            user = db.query(User).filter(
+                or_(
+                    func.lower(User.username) == identifier.lower(),
+                    func.lower(User.email) == identifier.lower()
+                )
+            ).first()
+        else:
+            user = db.query(User).filter(func.lower(User.username) == identifier.lower()).first()
 
         if not user:
             return jsonify({"status": "error", "message": "User account does not exist. Please register first."}), 401
