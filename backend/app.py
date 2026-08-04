@@ -15,8 +15,11 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 # Initialize SQLite database tables
 init_db()
 
-# Target WhatsApp Phone Number for homework submissions and queries
-WHATSAPP_NUMBER = "2347042695260"  # international format for 07042695260
+# Official School Contact Details
+SCHOOL_NAME = "Priceless Grace Academy"
+PHONE_NUMBER = "07042695260"
+WHATSAPP_NUMBER = "2347042695260"
+SCHOOL_EMAIL = "pricelessgraceacademy@gmail.com"
 
 @app.route("/")
 def serve_index():
@@ -31,9 +34,10 @@ def serve_static(path):
 @app.route("/api/config", methods=["GET"])
 def get_config():
     return jsonify({
-        "school_name": "Priceless Grace Academy",
-        "phone_number": "07042695260",
-        "whatsapp_number": WHATSAPP_NUMBER
+        "school_name": SCHOOL_NAME,
+        "phone_number": PHONE_NUMBER,
+        "whatsapp_number": WHATSAPP_NUMBER,
+        "email": SCHOOL_EMAIL
     })
 
 @app.route("/api/auth/login", methods=["POST"])
@@ -110,8 +114,8 @@ def submit_homework():
     db.commit()
     db.close()
 
-    # Pre-filled WhatsApp link pointing strictly to 07042695260
-    message = f"Hello Priceless Grace Academy Admin,%0A%0AStudent *{student_name}* ({class_level}) submitted homework for *{subject}*.%0AFile link: {file_url}"
+    # WhatsApp notification text pointing directly to 07042695260
+    message = f"Hello {SCHOOL_NAME} Admin,%0A%0AStudent *{student_name}* ({class_level}) submitted homework for *{subject}*.%0AFile link: {file_url}"
     whatsapp_link = f"https://wa.me/{WHATSAPP_NUMBER}?text={message}"
 
     return jsonify({
