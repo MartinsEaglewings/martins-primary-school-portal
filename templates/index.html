@@ -5,137 +5,221 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Priceless Grace Academy Portal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background-color: #f4f6f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .auth-card { max-width: 420px; margin: 60px auto; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); background: #fff; }
-        .dashboard-header { background: #1e3a8a; color: white; padding: 20px 0; border-radius: 0 0 15px 15px; }
-        .card { border: none; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        :root {
+            --primary-blue: #1e3a8a;
+            --accent-gold: #f59e0b;
+            --light-bg: #f8fafc;
+        }
+        body {
+            background-color: var(--light-bg);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar-custom {
+            background-color: var(--primary-blue);
+        }
+        .hero-section {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 60px 0;
+            border-bottom-left-radius: 25px;
+            border-bottom-right-radius: 25px;
+        }
+        .auth-card {
+            max-width: 450px;
+            margin: -40px auto 40px auto;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            background: #ffffff;
+            position: relative;
+            z-index: 10;
+        }
+        .dashboard-container {
+            max-width: 1100px;
+            margin: 30px auto;
+        }
+        .card-custom {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            transition: transform 0.2s;
+        }
+        .card-custom:hover {
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
 
-    <div class="dashboard-header text-center mb-4">
-        <h2 id="schoolHeader">Priceless Grace Academy</h2>
-        <p class="mb-0">Winners, Atan, Ogun state | 07042695260</p>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">🎓 Priceless Grace Academy</a>
+            <div class="ms-auto" id="navAuthButtons">
+                <button class="btn btn-outline-light btn-sm me-2" onclick="showView('loginView')">Sign In</button>
+                <button class="btn btn-warning btn-sm" onclick="showView('registerView')">Register</button>
+            </div>
+            <div class="ms-auto d-none" id="navLogoutButton">
+                <span class="text-light me-3" id="userBadge"></span>
+                <button class="btn btn-outline-light btn-sm" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO / LANDING PAGE HEADER -->
+    <div id="landingHero" class="hero-section text-center">
+        <div class="container">
+            <h1 class="display-5 fw-bold" id="schoolHeader">Priceless Grace Academy</h1>
+            <p class="lead mb-2">Excellence in Education & Moral Development</p>
+            <p class="small text-light opacity-75">
+                <i class="fas fa-map-marker-alt me-1"></i> Winners, Atan, Ogun state &nbsp;|&nbsp; 
+                <i class="fas fa-phone me-1"></i> 07042695260 &nbsp;|&nbsp; 
+                <i class="fab fa-whatsapp me-1"></i> 07042695260
+            </p>
+        </div>
     </div>
 
     <div class="container">
 
-        <!-- LOGIN VIEW -->
-        <div id="loginView" class="auth-card">
-            <h4 class="text-center mb-3">Sign In</h4>
-            <form onsubmit="handleLogin(event)">
-                <div class="mb-3">
-                    <label class="form-label">Username or Email</label>
-                    <input type="text" id="loginIdentifier" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Password</label>
-                    <input type="password" id="loginPassword" class="form-control" required>
-                </div>
-                <button type="submit" class="btn btn-primary w-100">Login</button>
-            </form>
-            <p class="text-center mt-3 mb-0">Don't have an account? <a href="#" onclick="showView('registerView')">Register</a></p>
-        </div>
+        <!-- LANDING PAGE OVERVIEW SECTION -->
+        <div id="landingView">
+            <!-- AUTH FORMS (OVERLAID ON LANDING) -->
+            <div id="loginView" class="auth-card">
+                <h4 class="text-center fw-bold text-dark mb-3">Portal Sign In</h4>
+                <form onsubmit="handleLogin(event)">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Username or Email</label>
+                        <input type="text" id="loginIdentifier" class="form-control" placeholder="Enter username or email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Password</label>
+                        <input type="password" id="loginPassword" class="form-control" placeholder="Enter password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 fw-bold">Sign In</button>
+                </form>
+                <p class="text-center mt-3 mb-0 small">Need an account? <a href="#" onclick="showView('registerView')">Create Account</a></p>
+            </div>
 
-        <!-- REGISTER VIEW -->
-        <div id="registerView" class="auth-card" style="display: none;">
-            <h4 class="text-center mb-3">Create Account</h4>
-            <form onsubmit="handleRegister(event)">
-                <div class="mb-3">
-                    <label class="form-label">Username</label>
-                    <input type="text" id="regUsername" class="form-control" required>
+            <div id="registerView" class="auth-card" style="display: none;">
+                <h4 class="text-center fw-bold text-dark mb-3">Register Student/Teacher</h4>
+                <form onsubmit="handleRegister(event)">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Username</label>
+                        <input type="text" id="regUsername" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Email</label>
+                        <input type="email" id="regEmail" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Password</label>
+                        <input type="password" id="regPassword" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Account Role</label>
+                        <select id="regRole" class="form-select">
+                            <option value="student">Student</option>
+                            <option value="admin">Teacher / Admin</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100 fw-bold">Register Account</button>
+                </form>
+                <p class="text-center mt-3 mb-0 small">Already registered? <a href="#" onclick="showView('loginView')">Sign In</a></p>
+            </div>
+
+            <!-- SCHOOL ANNOUNCEMENTS (PUBLIC LANDING VIEW) -->
+            <div class="row my-5">
+                <div class="col-md-8 mx-auto">
+                    <h3 class="fw-bold text-center mb-4">📢 Public Announcements</h3>
+                    <div id="publicAnnouncements"></div>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <input type="email" id="regEmail" class="form-control">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Password</label>
-                    <input type="password" id="regPassword" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Role</label>
-                    <select id="regRole" class="form-select">
-                        <option value="student">Student</option>
-                        <option value="admin">Teacher / Admin</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-success w-100">Register</button>
-            </form>
-            <p class="text-center mt-3 mb-0">Already registered? <a href="#" onclick="showView('loginView')">Login</a></p>
+            </div>
         </div>
 
         <!-- ADMIN DASHBOARD -->
-        <div id="adminDashboard" style="display: none;">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h3>👨‍🏫 Admin / Teacher Portal</h3>
+        <div id="adminDashboard" class="dashboard-container" style="display: none;">
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+                <h2>👨‍🏫 Admin & Teacher Control Center</h2>
                 <button class="btn btn-outline-danger btn-sm" onclick="logout()">Logout</button>
             </div>
 
             <div class="row">
-                <!-- Post Announcement -->
+                <!-- Post Announcement Form -->
                 <div class="col-md-6 mb-4">
-                    <div class="card p-3">
-                        <h5>Post Announcement</h5>
+                    <div class="card card-custom p-4">
+                        <h5 class="fw-bold text-primary mb-3"><i class="fas fa-bullhorn me-2"></i>Post New Announcement</h5>
                         <form onsubmit="postAnnouncement(event)">
-                            <input type="text" id="annTitle" class="form-control mb-2" placeholder="Title" required>
-                            <textarea id="annContent" class="form-control mb-2" rows="3" placeholder="Announcement Details" required></textarea>
-                            <button type="submit" class="btn btn-primary btn-sm">Post Announcement</button>
+                            <div class="mb-2">
+                                <input type="text" id="annTitle" class="form-control" placeholder="Announcement Title" required>
+                            </div>
+                            <div class="mb-2">
+                                <textarea id="annContent" class="form-control" rows="3" placeholder="Detailed content..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-sm w-100 fw-bold">Publish Announcement</button>
                         </form>
                     </div>
                 </div>
 
-                <!-- Create Assignment -->
+                <!-- Create Assignment Form -->
                 <div class="col-md-6 mb-4">
-                    <div class="card p-3">
-                        <h5>Create Assignment</h5>
+                    <div class="card card-custom p-4">
+                        <h5 class="fw-bold text-success mb-3"><i class="fas fa-tasks me-2"></i>Create New Assignment</h5>
                         <form onsubmit="postAssignment(event)">
-                            <input type="text" id="assTitle" class="form-control mb-2" placeholder="Assignment Title" required>
-                            <textarea id="assDesc" class="form-control mb-2" rows="2" placeholder="Instructions/Description"></textarea>
-                            <input type="file" id="assFile" class="form-control form-control-sm mb-2">
-                            <button type="submit" class="btn btn-success btn-sm">Upload Assignment</button>
+                            <div class="mb-2">
+                                <input type="text" id="assTitle" class="form-control" placeholder="Assignment Title" required>
+                            </div>
+                            <div class="mb-2">
+                                <textarea id="assDesc" class="form-control" rows="2" placeholder="Instructions for students..."></textarea>
+                            </div>
+                            <div class="mb-2">
+                                <input type="file" id="assFile" class="form-control form-control-sm">
+                            </div>
+                            <button type="submit" class="btn btn-success btn-sm w-100 fw-bold">Post Assignment</button>
                         </form>
                     </div>
                 </div>
             </div>
 
             <div class="row">
-                <!-- Active Announcements List -->
                 <div class="col-md-6 mb-4">
-                    <h4>Announcements</h4>
+                    <h4 class="fw-bold mb-3">Active Announcements</h4>
                     <div id="adminAnnouncements"></div>
                 </div>
-
-                <!-- Active Assignments List -->
                 <div class="col-md-6 mb-4">
-                    <h4>Assignments</h4>
+                    <h4 class="fw-bold mb-3">Active Assignments</h4>
                     <div id="adminAssignments"></div>
                 </div>
             </div>
         </div>
 
         <!-- STUDENT DASHBOARD -->
-        <div id="studentDashboard" style="display: none;">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h3>🎓 Student Portal</h3>
+        <div id="studentDashboard" class="dashboard-container" style="display: none;">
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+                <h2>🎓 Student Portal Dashboard</h2>
                 <button class="btn btn-outline-danger btn-sm" onclick="logout()">Logout</button>
             </div>
 
             <div class="row">
                 <div class="col-md-6 mb-4">
-                    <h4>📢 School Announcements</h4>
+                    <h4 class="fw-bold mb-3"><i class="fas fa-bullhorn text-primary me-2"></i>School Announcements</h4>
                     <div id="studentAnnouncements"></div>
                 </div>
 
                 <div class="col-md-6 mb-4">
-                    <h4>📚 Class Assignments</h4>
+                    <h4 class="fw-bold mb-3"><i class="fas fa-book-open text-success me-2"></i>Your Homework & Assignments</h4>
                     <div id="studentAssignments"></div>
                 </div>
             </div>
         </div>
 
     </div>
+
+    <!-- FOOTER -->
+    <footer class="text-center py-4 text-muted border-top mt-5">
+        <p class="mb-0">&copy; Priceless Grace Academy. All Rights Reserved.</p>
+    </footer>
 
     <script src="/static/js/main.js"></script>
 </body>
