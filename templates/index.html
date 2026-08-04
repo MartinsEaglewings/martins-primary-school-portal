@@ -15,8 +15,8 @@
             <h2>Priceless Grace Academy Model Primary School</h2>
         </div>
         <div class="nav-auth-buttons">
-            <button class="btn-primary" data-target="modal-login">Sign In</button>
-            <button class="btn-secondary" data-target="modal-register">Register</button>
+            <button class="btn-primary" onclick="openModal('modal-login')">Sign In</button>
+            <button class="btn-secondary" onclick="openModal('modal-register')">Register</button>
         </div>
     </nav>
 
@@ -30,8 +30,8 @@
                 Welcome to Priceless Grace Academy Model Primary School. We offer world-class primary education, moral foundation, and technological literacy for children across Nigeria.
             </p>
             <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 20px;">
-                <button class="btn-primary" data-target="modal-register" style="padding: 12px 28px; font-size: 1rem;">Enroll Your Child Now</button>
-                <button class="btn-secondary" data-target="modal-login" style="padding: 12px 28px; font-size: 1rem;">Portal Access</button>
+                <button class="btn-primary" onclick="openModal('modal-register')" style="padding: 12px 28px; font-size: 1rem;">Enroll Your Child Now</button>
+                <button class="btn-secondary" onclick="openModal('modal-login')" style="padding: 12px 28px; font-size: 1rem;">Portal Access</button>
             </div>
         </section>
 
@@ -111,7 +111,7 @@
             <div class="glass-card">
                 <div class="modal-header">
                     <h3>🟢 Student / Teacher Registration</h3>
-                    <button class="btn-close">✕</button>
+                    <button class="btn-close" onclick="closeModal(this)">✕</button>
                 </div>
                 <form id="form-register">
                     <input type="text" name="full_name" placeholder="Full Name (e.g., Priceless Grace Academy Adebayo)" required>
@@ -138,7 +138,7 @@
             <div class="glass-card">
                 <div class="modal-header">
                     <h3>🔵 Portal Sign In</h3>
-                    <button class="btn-close">✕</button>
+                    <button class="btn-close" onclick="closeModal(this)">✕</button>
                 </div>
                 <form id="form-login">
                     <input type="email" name="email" placeholder="Registered Email" required>
@@ -155,7 +155,7 @@
             <div class="glass-card">
                 <div class="modal-header">
                     <h2 id="student-welcome-title">🎓 Student Portal</h2>
-                    <button class="btn-close">✕</button>
+                    <button class="btn-close" onclick="closeModal(this)">✕</button>
                 </div>
 
                 <!-- Announcements Feed -->
@@ -192,7 +192,7 @@
             <div class="glass-card">
                 <div class="modal-header">
                     <h2>👑 Admin & Teacher Dashboard</h2>
-                    <button class="btn-close">✕</button>
+                    <button class="btn-close" onclick="closeModal(this)">✕</button>
                 </div>
 
                 <!-- Post Assignment -->
