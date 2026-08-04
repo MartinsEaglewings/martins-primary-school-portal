@@ -1,15 +1,23 @@
 import os
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, render_template
 from flask_cors import CORS
 import jwt
 import datetime
 from database import init_db, SessionLocal, User, Submission, Assignment, Announcement
 
-app = Flask(__name__, static_folder="../frontend", static_url_path="")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.abspath(os.path.join(BASE_DIR, ".."))
+
+app = Flask(
+    __name__,
+    template_folder=os.path.join(PROJECT_ROOT, "templates"),
+    static_folder=os.path.join(PROJECT_ROOT, "static"),
+    static_url_path="/static"
+)
 CORS(app)
 
 SECRET_KEY = "priceless_grace_secret_key"
-UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../uploads")
+UPLOAD_FOLDER = os.path.join(PROJECT_ROOT, "uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # Initialize SQLite database tables
@@ -23,13 +31,11 @@ SCHOOL_EMAIL = "pricelessgraceacademy@gmail.com"
 
 @app.route("/")
 def serve_index():
-    return send_from_directory(app.static_folder, "index.html")
-
-@app.route("/<path:path>")
-def serve_static(path):
-    if os.path.exists(os.path.join(app.static_folder, path)):
-        return send_from_directory(app.static_folder, path)
-    return send_from_directory(app.static_folder, "index.html")
+    # If templates/index.html exists, render it. Otherwise, serve root fallback.
+    template_path = os.path.join(app.template_folder, "index.html")
+    if os.path.exists(template_path):
+        return render_template("index.html")
+    return f"<h1>Welcome to {SCHOOL_NAME}</h1><p>Contact: {PHONE_NUMBER} | {SCHOOL_EMAIL}</p>"
 
 @app.route("/api/config", methods=["GET"])
 def get_config():
