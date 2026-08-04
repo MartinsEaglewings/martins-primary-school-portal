@@ -103,6 +103,7 @@ def login():
     else:
         return jsonify({'error': 'Invalid credentials!'}), 401
 
+# --- ANNOUNCEMENTS API ---
 @app.route('/api/announcements', methods=['GET', 'POST'])
 def announcements():
     conn = sqlite3.connect(DB_PATH)
@@ -119,6 +120,42 @@ def announcements():
     rows = cursor.fetchall()
     conn.close()
     return jsonify([{'id': r[0], 'title': r[1], 'content': r[2], 'created_at': r[3]} for r in rows]), 200
+
+@app.route('/api/announcements/<int:ann_id>', methods=['DELETE'])
+def delete_announcement(ann_id):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM announcements WHERE id = ?", (ann_id,))
+    conn.commit()
+    conn.close()
+    return jsonify({'message': 'Announcement deleted!'}), 200
+
+# --- ASSIGNMENTS API ---
+@app.route('/api/assignments', methods=['GET', 'POST'])
+def assignments():
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    if request.method == 'POST':
+        data = request.get_json()
+        cursor.execute("INSERT INTO assignments (title, description) VALUES (?, ?)",
+                       (data.get('title'), data.get('description')))
+        conn.commit()
+        conn.close()
+        return jsonify({'message': 'Assignment created!'}), 201
+
+    cursor.execute("SELECT id, title, description, created_at FROM assignments ORDER BY id DESC")
+    rows = cursor.fetchall()
+    conn.close()
+    return jsonify([{'id': r[0], 'title': r[1], 'description': r[2], 'created_at': r[3]} for r in rows]), 200
+
+@app.route('/api/assignments/<int:ass_id>', methods=['DELETE'])
+def delete_assignment(ass_id):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM assignments WHERE id = ?", (ass_id,))
+    conn.commit()
+    conn.close()
+    return jsonify({'message': 'Assignment deleted!'}), 200
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 8000))
