@@ -52,7 +52,6 @@ def get_config():
         "email": SCHOOL_EMAIL
     })
 
-# Auth Routes
 @app.route("/api/auth/register", methods=["POST", "OPTIONS"])
 def register():
     if request.method == "OPTIONS":
@@ -65,7 +64,7 @@ def register():
     role = data.get("role", "student")
 
     if not username or not password:
-        return jsonify({"status": "error", "message": "Username and password are required"}), 400
+        return jsonify({"status": "error", "message": "Username and password required"}), 400
 
     db = SessionLocal()
     try:
@@ -118,7 +117,7 @@ def login():
             user = db.query(User).filter(func.lower(User.username) == identifier.lower()).first()
 
         if not user or user.password != password:
-            return jsonify({"status": "error", "message": "Invalid username or password"}), 401
+            return jsonify({"status": "error", "message": "Invalid credentials"}), 401
 
         token = jwt.encode({
             "user_id": user.id,
@@ -134,7 +133,6 @@ def login():
     finally:
         db.close()
 
-# Announcements Endpoints
 @app.route("/api/announcements", methods=["GET", "POST"])
 def manage_announcements():
     db = SessionLocal()
@@ -151,7 +149,16 @@ def manage_announcements():
     db.close()
     return jsonify(result)
 
-# Assignments Endpoints
+@app.route("/api/announcements/<int:ann_id>", methods=["DELETE"])
+def delete_announcement(ann_id):
+    db = SessionLocal()
+    ann = db.query(Announcement).filter(Announcement.id == ann_id).first()
+    if ann:
+        db.delete(ann)
+        db.commit()
+    db.close()
+    return jsonify({"status": "success"})
+
 @app.route("/api/assignments", methods=["GET", "POST"])
 def manage_assignments():
     db = SessionLocal()
@@ -175,7 +182,16 @@ def manage_assignments():
     db.close()
     return jsonify(result)
 
-# Submissions Endpoint
+@app.route("/api/assignments/<int:ass_id>", methods=["DELETE"])
+def delete_assignment(ass_id):
+    db = SessionLocal()
+    ass = db.query(Assignment).filter(Assignment.id == ass_id).first()
+    if ass:
+        db.delete(ass)
+        db.commit()
+    db.close()
+    return jsonify({"status": "success"})
+
 @app.route("/api/submissions", methods=["POST"])
 def submit_assignment():
     file = request.files.get("file")
