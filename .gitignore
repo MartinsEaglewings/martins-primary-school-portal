@@ -1,0 +1,6 @@
+*.db
+uploads/*
+__pycache__/
+!uploads/.gitkeep
+!uploads/.gitkeep
+__pycache__/

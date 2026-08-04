@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Martins Model Primary School Portal</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <!-- TOP NAVIGATION -->
+    <nav class="glass-card navbar">
+        <div class="nav-brand">
+            <span style="font-size: 1.6rem;">🇳🇬 🏫</span>
+            <h2>Martins Model Primary School</h2>
+        </div>
+        <div class="nav-auth-buttons">
+            <button class="btn-primary" data-target="modal-login">Sign In</button>
+            <button class="btn-secondary" data-target="modal-register">Register</button>
+        </div>
+    </nav>
+
+    <!-- LANDING HERO PAGE -->
+    <main style="padding: 0 15px 30px 15px; max-width: 1100px; margin: 0 auto;">
+        
+        <!-- Hero Section -->
+        <section class="glass-card hero-card">
+            <h1 class="hero-title">Nurturing Tomorrow's Leaders Today</h1>
+            <p class="hero-subtitle">
+                Welcome to Martins Model Primary School. We offer world-class primary education, moral foundation, and technological literacy for children across Nigeria.
+            </p>
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 20px;">
+                <button class="btn-primary" data-target="modal-register" style="padding: 12px 28px; font-size: 1rem;">Enroll Your Child Now</button>
+                <button class="btn-secondary" data-target="modal-login" style="padding: 12px 28px; font-size: 1rem;">Portal Access</button>
+            </div>
+        </section>
+
+        <!-- Classes Offered Section -->
+        <section class="glass-card classes-section">
+            <h3 class="section-heading">📚 Academic Classes Offered</h3>
+            <p style="text-align: center; color: #cbd5e1; font-size: 0.95rem;">
+                Our curriculum covers foundational early childhood education up to secondary transition levels:
+            </p>
+            <div class="class-grid">
+                <div class="class-badge" style="border-top: 4px solid #10b981;">Creche & Nursery</div>
+                <div class="class-badge" style="border-top: 4px solid #f59e0b;">Kindergarten</div>
+                <div class="class-badge" style="border-top: 4px solid #3b82f6;">Primary 1</div>
+                <div class="class-badge" style="border-top: 4px solid #8b5cf6;">Primary 2</div>
+                <div class="class-badge" style="border-top: 4px solid #ef4444;">Primary 3</div>
+                <div class="class-badge" style="border-top: 4px solid #10b981;">Primary 4</div>
+                <div class="class-badge" style="border-top: 4px solid #f59e0b;">Primary 5</div>
+                <div class="class-badge" style="border-top: 4px solid #3b82f6;">Primary 6 (Common Entrance)</div>
+            </div>
+        </section>
+
+        <!-- About & School Features -->
+        <section class="glass-card" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+            <div>
+                <h3 style="color: #10b981; margin-bottom: 10px;">🌟 Why Choose Martins School?</h3>
+                <ul style="list-style-type: none; line-height: 2; color: #cbd5e1; font-size: 0.95rem;">
+                    <li>✅ Government Approved Standard Curriculum</li>
+                    <li>✅ Computer & ICT Skill Foundations</li>
+                    <li>✅ Dedicated & Qualified Teaching Staff</li>
+                    <li>✅ Safe, Vibrant & Serene Learning Environment</li>
+                </ul>
+            </div>
+            <div>
+                <h3 style="color: #f59e0b; margin-bottom: 10px;">📋 Admission Procedure</h3>
+                <p style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.6;">
+                    Admissions are open for the academic session. Register your child on this portal or visit our admissions office with your child's birth certificate and passport photographs.
+                </p>
+            </div>
+        </section>
+
+        <!-- Contact Admissions Section -->
+        <section class="glass-card contact-card">
+            <h3 class="section-heading" style="color: #3b82f6;">📞 Contact Admissions Desk</h3>
+            <p style="text-align: center; color: #cbd5e1; font-size: 0.95rem;">
+                Have questions or want your child to join Martins Model Primary School? Reach out directly:
+            </p>
+            <div class="contact-info-list">
+                <div class="contact-item">
+                    <span style="font-size: 1.3rem;">📍</span>
+                    <div>
+                        <strong>School Address:</strong>
+                        <span style="display: block; color: #cbd5e1;">Martins Academy Campus, Victoria Island / Ikeja Axis, Lagos State, Nigeria</span>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <span style="font-size: 1.3rem;">📱</span>
+                    <div>
+                        <strong>Phone / WhatsApp:</strong>
+                        <span style="display: block; color: #cbd5e1;">+234 906 805 3574 | +234 812 345 6789</span>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <span style="font-size: 1.3rem;">✉️</span>
+                    <div>
+                        <strong>Email Enquiries:</strong>
+                        <span style="display: block; color: #cbd5e1;">admissions@martinsschool.edu.ng</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- COLORFUL REGISTER MODAL -->
+    <div class="modal-screen" id="modal-register">
+        <div class="modal-content-wrapper" style="max-width: 440px;">
+            <div class="glass-card">
+                <div class="modal-header">
+                    <h3>🟢 Student / Teacher Registration</h3>
+                    <button class="btn-close">✕</button>
+                </div>
+                <form id="form-register">
+                    <input type="text" name="full_name" placeholder="Full Name (e.g., Martins Adebayo)" required>
+                    <input type="text" name="username" placeholder="Username" required>
+                    <input type="email" name="email" placeholder="Email Address" required>
+                    <input type="password" name="password" placeholder="Password" required>
+                    <label style="font-size: 0.85rem; color: #f59e0b; font-weight: 600;">Account Type:</label>
+                    <select name="role" id="reg-role">
+                        <option value="student">Student Account</option>
+                        <option value="teacher">Teacher / Admin Account</option>
+                    </select>
+                    <div id="pin-container" style="display: none;">
+                        <input type="password" name="teacher_pin" placeholder="Enter Teacher PIN Passkey">
+                    </div>
+                    <button type="submit" class="btn-primary" style="width:100%; margin-top: 10px;">Create Portal Account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- COLORFUL LOGIN MODAL -->
+    <div class="modal-screen" id="modal-login">
+        <div class="modal-content-wrapper" style="max-width: 440px;">
+            <div class="glass-card">
+                <div class="modal-header">
+                    <h3>🔵 Portal Sign In</h3>
+                    <button class="btn-close">✕</button>
+                </div>
+                <form id="form-login">
+                    <input type="email" name="email" placeholder="Registered Email" required>
+                    <input type="password" name="password" placeholder="Password" required>
+                    <button type="submit" class="btn-secondary" style="width:100%; margin-top: 10px;">Login to Portal</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- COLORFUL STUDENT DASHBOARD MODAL -->
+    <div class="modal-screen" id="modal-student-dashboard">
+        <div class="modal-content-wrapper">
+            <div class="glass-card">
+                <div class="modal-header">
+                    <h2 id="student-welcome-title">🎓 Student Portal</h2>
+                    <button class="btn-close">✕</button>
+                </div>
+
+                <!-- Announcements Feed -->
+                <div class="glass-card">
+                    <h3 style="color: #f59e0b;">📢 School Announcements</h3>
+                    <div id="student-announcement-list"></div>
+                </div>
+
+                <!-- Assignments & Submission Form -->
+                <div class="glass-card">
+                    <h3 style="color: #10b981;">📚 Active Homework & Assignments</h3>
+                    <div id="student-assignment-list"></div>
+
+                    <hr style="border-color: var(--glass-border); margin: 20px 0;">
+
+                    <h4 style="color:#f59e0b; margin-bottom: 10px;">Submit Assignment Homework</h4>
+                    <form id="form-submit-assignment" enctype="multipart/form-data">
+                        <label style="font-size:0.85rem; color:#cbd5e1;">Select Assignment Subject:</label>
+                        <select name="assignment_id" id="student-assignment-select" required></select>
+
+                        <label style="font-size:0.85rem; color:#cbd5e1;">Attach Homework File Proof:</label>
+                        <input type="file" name="file" required>
+
+                        <button type="submit" class="btn-primary" style="width:100%;">Upload & Submit Homework</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- COLORFUL TEACHER / ADMIN DASHBOARD MODAL -->
+    <div class="modal-screen" id="modal-admin-dashboard">
+        <div class="modal-content-wrapper">
+            <div class="glass-card">
+                <div class="modal-header">
+                    <h2>👑 Admin & Teacher Dashboard</h2>
+                    <button class="btn-close">✕</button>
+                </div>
+
+                <!-- Post Assignment -->
+                <div class="glass-card">
+                    <h3 style="color: #10b981;">Post New Class Assignment</h3>
+                    <form id="form-post-assignment">
+                        <input type="text" name="title" placeholder="Assignment Title (e.g. Primary 4 Mathematics)" required>
+                        <textarea name="instructions" placeholder="Assignment Instructions for Students" required></textarea>
+                        <input type="date" name="due_date" required>
+                        <button type="submit" class="btn-primary">Post Assignment</button>
+                    </form>
+                    <h4 style="margin-top:20px; color:#f59e0b;">Active Posted Assignments:</h4>
+                    <div id="admin-assignment-list"></div>
+                </div>
+
+                <!-- Post Announcement -->
+                <div class="glass-card">
+                    <h3 style="color: #3b82f6;">Post School Announcement</h3>
+                    <form id="form-post-announcement">
+                        <input type="text" name="title" placeholder="Announcement Title" required>
+                        <textarea name="content" placeholder="Announcement Content" required></textarea>
+                        <button type="submit" class="btn-secondary">Post Announcement</button>
+                    </form>
+                    <h4 style="margin-top:20px; color:#f59e0b;">Active Posted Announcements:</h4>
+                    <div id="admin-announcement-list"></div>
+                </div>
+
+                <!-- Student Submissions Table -->
+                <div class="glass-card">
+                    <h3 style="color: #8b5cf6;">Submitted Student Homework</h3>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Student Name</th>
+                                    <th>Email</th>
+                                    <th>Assignment</th>
+                                    <th>Submitted At</th>
+                                    <th>File Proof</th>
+                                    <th>WhatsApp Direct</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-submissions-table"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
