@@ -52,6 +52,7 @@ def get_config():
         "email": SCHOOL_EMAIL
     })
 
+# Auth Routes
 @app.route("/api/auth/register", methods=["POST", "OPTIONS"])
 def register():
     if request.method == "OPTIONS":
@@ -68,7 +69,6 @@ def register():
 
     db = SessionLocal()
     try:
-        # Check if user exists safely
         if hasattr(User, 'email'):
             existing_user = db.query(User).filter(
                 or_(
@@ -80,7 +80,7 @@ def register():
             existing_user = db.query(User).filter(func.lower(User.username) == username.lower()).first()
 
         if existing_user:
-            return jsonify({"status": "error", "message": "Account with this Username or Email already exists"}), 400
+            return jsonify({"status": "error", "message": "Account already exists"}), 400
 
         if hasattr(User, 'email'):
             new_user = User(username=username, email=email, password=password, role=role)
@@ -89,11 +89,10 @@ def register():
 
         db.add(new_user)
         db.commit()
-        return jsonify({"status": "success", "message": "Account created successfully!"})
+        return jsonify({"status": "success", "message": "Account created!"})
     except Exception as e:
         db.rollback()
-        print(f"[REGISTER ERROR] {str(e)}")
-        return jsonify({"status": "error", "message": f"Database error: {str(e)}"}), 500
+        return jsonify({"status": "error", "message": str(e)}), 500
     finally:
         db.close()
 
@@ -105,9 +104,6 @@ def login():
     data = request.json or {}
     identifier = (data.get("identifier") or data.get("username") or data.get("email") or "").strip()
     password = (data.get("password") or "").strip()
-
-    if not identifier or not password:
-        return jsonify({"status": "error", "message": "Missing credentials"}), 400
 
     db = SessionLocal()
     try:
@@ -121,11 +117,8 @@ def login():
         else:
             user = db.query(User).filter(func.lower(User.username) == identifier.lower()).first()
 
-        if not user:
-            return jsonify({"status": "error", "message": "User account does not exist. Please register first."}), 401
-
-        if user.password != password:
-            return jsonify({"status": "error", "message": "Incorrect password. Please try again."}), 401
+        if not user or user.password != password:
+            return jsonify({"status": "error", "message": "Invalid username or password"}), 401
 
         token = jwt.encode({
             "user_id": user.id,
@@ -138,11 +131,67 @@ def login():
             "token": token,
             "user": {"id": user.id, "username": user.username, "role": user.role}
         })
-    except Exception as e:
-        print(f"[LOGIN ERROR] {str(e)}")
-        return jsonify({"status": "error", "message": f"Server error: {str(e)}"}), 500
     finally:
         db.close()
+
+# Announcements Endpoints
+@app.route("/api/announcements", methods=["GET", "POST"])
+def manage_announcements():
+    db = SessionLocal()
+    if request.method == "POST":
+        data = request.json or {}
+        new_item = Announcement(title=data.get("title"), content=data.get("content"))
+        db.add(new_item)
+        db.commit()
+        db.close()
+        return jsonify({"status": "success"})
+    
+    announcements = db.query(Announcement).order_by(Announcement.created_at.desc()).all()
+    result = [{"id": a.id, "title": a.title, "content": a.content, "created_at": a.created_at.isoformat()} for a in announcements]
+    db.close()
+    return jsonify(result)
+
+# Assignments Endpoints
+@app.route("/api/assignments", methods=["GET", "POST"])
+def manage_assignments():
+    db = SessionLocal()
+    if request.method == "POST":
+        title = request.form.get("title")
+        description = request.form.get("description")
+        file = request.files.get("file")
+        filename = None
+        if file:
+            filename = file.filename
+            file.save(os.path.join(UPLOAD_FOLDER, filename))
+            
+        new_item = Assignment(title=title, description=description, file_path=filename)
+        db.add(new_item)
+        db.commit()
+        db.close()
+        return jsonify({"status": "success"})
+        
+    assignments = db.query(Assignment).order_by(Assignment.created_at.desc()).all()
+    result = [{"id": a.id, "title": a.title, "description": a.description, "file_path": a.file_path} for a in assignments]
+    db.close()
+    return jsonify(result)
+
+# Submissions Endpoint
+@app.route("/api/submissions", methods=["POST"])
+def submit_assignment():
+    file = request.files.get("file")
+    assignment_id = request.form.get("assignment_id")
+    
+    if file:
+        filename = f"sub_{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}_{file.filename}"
+        file.save(os.path.join(UPLOAD_FOLDER, filename))
+        
+        db = SessionLocal()
+        sub = Submission(assignment_id=assignment_id, student_id=1, file_path=filename)
+        db.add(sub)
+        db.commit()
+        db.close()
+        return jsonify({"status": "success", "file_path": filename})
+    return jsonify({"status": "error", "message": "No file uploaded"}), 400
 
 @app.route("/uploads/<filename>", methods=["GET"])
 def download_file(filename):
