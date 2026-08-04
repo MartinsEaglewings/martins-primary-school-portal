@@ -23,24 +23,25 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 # Initialize SQLite database tables
 init_db()
 
-# Official School Contact Details
+# Official Contact Details for Priceless Grace Academy
 SCHOOL_NAME = "Priceless Grace Academy"
+SCHOOL_ADDRESS = "Priceless Grace Academy Campus, Victoria Island / Ikeja Axis, Lagos State, Nigeria"
 PHONE_NUMBER = "07042695260"
 WHATSAPP_NUMBER = "2347042695260"
 SCHOOL_EMAIL = "pricelessgraceacademy@gmail.com"
 
 @app.route("/")
 def serve_index():
-    # If templates/index.html exists, render it. Otherwise, serve root fallback.
     template_path = os.path.join(app.template_folder, "index.html")
     if os.path.exists(template_path):
         return render_template("index.html")
-    return f"<h1>Welcome to {SCHOOL_NAME}</h1><p>Contact: {PHONE_NUMBER} | {SCHOOL_EMAIL}</p>"
+    return f"<h1>Welcome to {SCHOOL_NAME}</h1><p>Address: {SCHOOL_ADDRESS}</p><p>Contact: {PHONE_NUMBER} | {SCHOOL_EMAIL}</p>"
 
 @app.route("/api/config", methods=["GET"])
 def get_config():
     return jsonify({
         "school_name": SCHOOL_NAME,
+        "school_address": SCHOOL_ADDRESS,
         "phone_number": PHONE_NUMBER,
         "whatsapp_number": WHATSAPP_NUMBER,
         "email": SCHOOL_EMAIL
@@ -120,7 +121,6 @@ def submit_homework():
     db.commit()
     db.close()
 
-    # WhatsApp notification text pointing directly to 07042695260
     message = f"Hello {SCHOOL_NAME} Admin,%0A%0AStudent *{student_name}* ({class_level}) submitted homework for *{subject}*.%0AFile link: {file_url}"
     whatsapp_link = f"https://wa.me/{WHATSAPP_NUMBER}?text={message}"
 
