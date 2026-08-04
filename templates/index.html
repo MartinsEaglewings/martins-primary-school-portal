@@ -206,11 +206,18 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label small fw-bold">Account Role</label>
-                        <select id="regRole" class="form-select">
+                        <select id="regRole" class="form-select" onchange="toggleTeacherPinField()">
                             <option value="student">Pupil / Student</option>
                             <option value="admin">Teacher / Admin</option>
                         </select>
                     </div>
+
+                    <!-- TEACHER/ADMIN PIN CODE SECTION -->
+                    <div class="mb-3" id="adminPinGroup" style="display: none;">
+                        <label class="form-label small fw-bold text-danger"><i class="fas fa-key me-1"></i>Teacher Passcode Required</label>
+                        <input type="password" id="regAdminPin" class="form-control border-danger" placeholder="Enter Teacher Security PIN">
+                    </div>
+
                     <button type="submit" class="btn btn-red w-100 fw-bold py-2">Register Account</button>
                 </form>
                 <p class="text-center mt-3 mb-0 small">Already registered? <a href="#" onclick="showView('loginView')" class="text-success fw-bold">Sign In</a></p>
@@ -366,5 +373,21 @@
     </footer>
 
     <script src="/static/js/main.js"></script>
+    <script>
+        function toggleTeacherPinField() {
+            const roleSelect = document.getElementById('regRole');
+            const pinGroup = document.getElementById('adminPinGroup');
+            const pinInput = document.getElementById('regAdminPin');
+
+            if (roleSelect.value === 'admin') {
+                pinGroup.style.display = 'block';
+                pinInput.required = true;
+            } else {
+                pinGroup.style.display = 'none';
+                pinInput.required = false;
+                pinInput.value = '';
+            }
+        }
+    </script>
 </body>
 </html>
