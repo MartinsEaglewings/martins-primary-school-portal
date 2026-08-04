@@ -14,16 +14,16 @@ app = Flask(
     static_folder=os.path.join(PROJECT_ROOT, "static"),
     static_url_path="/static"
 )
-CORS(app)
+
+# Enable CORS for all origins and options pre-flight requests
+CORS(app, resources={r"/api/*": {"origins" : "*"}})
 
 SECRET_KEY = "priceless_grace_secret_key"
 UPLOAD_FOLDER = os.path.join(PROJECT_ROOT, "uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-# Initialize SQLite database tables
 init_db()
 
-# Official Contact Details for Priceless Grace Academy
 SCHOOL_NAME = "Priceless Grace Academy"
 SCHOOL_ADDRESS = "Winners, Atan, Ogun state"
 PHONE_NUMBER = "07042695260"
@@ -35,7 +35,7 @@ def serve_index():
     template_path = os.path.join(app.template_folder, "index.html")
     if os.path.exists(template_path):
         return render_template("index.html")
-    return f"<h1>Welcome to {SCHOOL_NAME}</h1><p>Address: {SCHOOL_ADDRESS}</p><p>Contact: {PHONE_NUMBER} | {SCHOOL_EMAIL}</p>"
+    return f"<h1>Welcome to {SCHOOL_NAME}</h1><p>Address: {SCHOOL_ADDRESS}</p>"
 
 @app.route("/api/config", methods=["GET"])
 def get_config():
@@ -47,8 +47,37 @@ def get_config():
         "email": SCHOOL_EMAIL
     })
 
-@app.route("/api/auth/login", methods=["POST"])
+@app.route("/api/auth/register", methods=["POST", "OPTIONS"])
+def register():
+    if request.method == "OPTIONS":
+        return "", 200
+        
+    data = request.json or {}
+    username = data.get("username")
+    password = data.get("password")
+    role = data.get("role", "student")
+    
+    if not username or not password:
+        return jsonify({"status": "error", "message": "Username and password required"}), 400
+        
+    db = SessionLocal()
+    existing_user = db.query(User).filter(User.username == username).first()
+    if existing_user:
+        db.close()
+        return jsonify({"status": "error", "message": "Username already taken"}), 400
+        
+    new_user = User(username=username, password=password, role=role)
+    db.add(new_user)
+    db.commit()
+    db.close()
+    
+    return jsonify({"status": "success", "message": "Account created successfully!"})
+
+@app.route("/api/auth/login", methods=["POST", "OPTIONS"])
 def login():
+    if request.method == "OPTIONS":
+        return "", 200
+
     data = request.json or {}
     username = data.get("username")
     password = data.get("password")
