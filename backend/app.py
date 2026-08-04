@@ -1,13 +1,19 @@
 import os
+import sys
+
+# Ensure backend directory is in Python path for smooth imports
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+if BASE_DIR not in sys.path:
+    sys.path.insert(0, BASE_DIR)
+
+PROJECT_ROOT = os.path.abspath(os.path.join(BASE_DIR, ".."))
+
 from flask import Flask, request, jsonify, send_from_directory, render_template
 from flask_cors import CORS
 import jwt
 import datetime
-from sqlalchemy import or_
+from sqlalchemy import or_, func
 from database import init_db, SessionLocal, User, Submission, Assignment, Announcement
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_ROOT = os.path.abspath(os.path.join(BASE_DIR, ".."))
 
 app = Flask(
     __name__,
@@ -22,6 +28,7 @@ SECRET_KEY = "priceless_grace_secret_key"
 UPLOAD_FOLDER = os.path.join(PROJECT_ROOT, "uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+# Initialize database
 init_db()
 
 SCHOOL_NAME = "Priceless Grace Academy"
@@ -55,24 +62,35 @@ def register():
     data = request.json or {}
     username = data.get("username", "").strip()
     email = data.get("email", "").strip()
-    password = data.get("password")
+    password = data.get("password", "").strip()
     role = data.get("role", "student")
 
     if not username or not password:
         return jsonify({"status": "error", "message": "Username and password are required"}), 400
 
     db = SessionLocal()
-    existing_user = db.query(User).filter(or_(User.username == username, User.username == email)).first()
-    if existing_user:
+    try:
+        existing_user = db.query(User).filter(
+            or_(
+                func.lower(User.username) == username.lower(),
+                func.lower(User.email) == email.lower() if email else False
+            )
+        ).first()
+
+        if existing_user:
+            return jsonify({"status": "error", "message": "Account with this Username or Email already exists"}), 400
+
+        new_user = User(username=username, email=email, password=password, role=role)
+        db.add(new_user)
+        db.commit()
+        print(f"[REGISTER SUCCESS] Created user: '{username}', role: '{role}'")
+        return jsonify({"status": "success", "message": "Account created successfully!"})
+    except Exception as e:
+        db.rollback()
+        print(f"[REGISTER ERROR] {str(e)}")
+        return jsonify({"status": "error", "message": f"Database error: {str(e)}"}), 500
+    finally:
         db.close()
-        return jsonify({"status": "error", "message": "Account with this Username or Email already exists"}), 400
-
-    new_user = User(username=username, password=password, role=role)
-    db.add(new_user)
-    db.commit()
-    db.close()
-
-    return jsonify({"status": "success", "message": "Account created successfully!"})
 
 @app.route("/api/auth/login", methods=["POST", "OPTIONS"])
 def login():
@@ -81,17 +99,26 @@ def login():
 
     data = request.json or {}
     identifier = (data.get("identifier") or data.get("username") or data.get("email") or "").strip()
-    password = data.get("password")
+    password = (data.get("password") or "").strip()
 
     if not identifier or not password:
         return jsonify({"status": "error", "message": "Missing credentials"}), 400
 
     db = SessionLocal()
-    # Check if identifier matches username OR password directly
-    user = db.query(User).filter(User.username == identifier, User.password == password).first()
-    db.close()
+    try:
+        user = db.query(User).filter(
+            or_(
+                func.lower(User.username) == identifier.lower(),
+                func.lower(User.email) == identifier.lower()
+            )
+        ).first()
 
-    if user:
+        if not user:
+            return jsonify({"status": "error", "message": "User account does not exist. Please register first."}), 401
+
+        if user.password != password:
+            return jsonify({"status": "error", "message": "Incorrect password. Please try again."}), 401
+
         token = jwt.encode({
             "user_id": user.id,
             "role": user.role,
@@ -103,8 +130,11 @@ def login():
             "token": token,
             "user": {"id": user.id, "username": user.username, "role": user.role}
         })
-
-    return jsonify({"status": "error", "message": "Invalid username/email or password"}), 401
+    except Exception as e:
+        print(f"[LOGIN ERROR] {str(e)}")
+        return jsonify({"status": "error", "message": f"Server error: {str(e)}"}), 500
+    finally:
+        db.close()
 
 @app.route("/uploads/<filename>", methods=["GET"])
 def download_file(filename):
