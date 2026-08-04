@@ -3,6 +3,7 @@ from flask import Flask, request, jsonify, send_from_directory, render_template
 from flask_cors import CORS
 import jwt
 import datetime
+from sqlalchemy import or_
 from database import init_db, SessionLocal, User, Submission, Assignment, Announcement
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -52,19 +53,19 @@ def register():
         return "", 200
 
     data = request.json or {}
-    username = data.get("username") or data.get("email")
-    email = data.get("email") or username
+    username = data.get("username", "").strip()
+    email = data.get("email", "").strip()
     password = data.get("password")
     role = data.get("role", "student")
 
     if not username or not password:
-        return jsonify({"status": "error", "message": "Username/Email and password are required"}), 400
+        return jsonify({"status": "error", "message": "Username and password are required"}), 400
 
     db = SessionLocal()
-    existing_user = db.query(User).filter(User.username == username).first()
+    existing_user = db.query(User).filter(or_(User.username == username, User.username == email)).first()
     if existing_user:
         db.close()
-        return jsonify({"status": "error", "message": "Account with this username/email already exists"}), 400
+        return jsonify({"status": "error", "message": "Account with this Username or Email already exists"}), 400
 
     new_user = User(username=username, password=password, role=role)
     db.add(new_user)
@@ -79,10 +80,14 @@ def login():
         return "", 200
 
     data = request.json or {}
-    identifier = data.get("username") or data.get("email")
+    identifier = (data.get("identifier") or data.get("username") or data.get("email") or "").strip()
     password = data.get("password")
 
+    if not identifier or not password:
+        return jsonify({"status": "error", "message": "Missing credentials"}), 400
+
     db = SessionLocal()
+    # Check if identifier matches username OR password directly
     user = db.query(User).filter(User.username == identifier, User.password == password).first()
     db.close()
 
@@ -99,7 +104,7 @@ def login():
             "user": {"id": user.id, "username": user.username, "role": user.role}
         })
 
-    return jsonify({"status": "error", "message": "Invalid email/username or password"}), 401
+    return jsonify({"status": "error", "message": "Invalid username/email or password"}), 401
 
 @app.route("/uploads/<filename>", methods=["GET"])
 def download_file(filename):

@@ -23,7 +23,6 @@
             min-height: 100vh;
         }
 
-        /* Glass Cards */
         .glass-card {
             background: var(--card-bg);
             backdrop-filter: blur(12px);
@@ -34,7 +33,6 @@
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
-        /* Navbar */
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -43,19 +41,12 @@
             margin: 15px;
         }
 
-        .nav-brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
         .nav-brand h2 {
             margin: 0;
             font-size: 1.2rem;
             color: #f59e0b;
         }
 
-        /* Buttons */
         .btn-primary {
             background: linear-gradient(135deg, #10b981, #059669);
             color: white;
@@ -64,7 +55,6 @@
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s, opacity 0.2s;
         }
 
         .btn-secondary {
@@ -75,11 +65,6 @@
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s, opacity 0.2s;
-        }
-
-        .btn-primary:active, .btn-secondary:active {
-            transform: scale(0.96);
         }
 
         .btn-close {
@@ -93,7 +78,6 @@
             cursor: pointer;
         }
 
-        /* Hero */
         .hero-card {
             text-align: center;
             padding: 40px 20px;
@@ -107,14 +91,13 @@
 
         .hero-subtitle {
             color: #cbd5e1;
-            max-width: 600px;
+            max-width: 650px;
             margin: 0 auto;
             line-height: 1.6;
         }
 
-        /* MODAL OVERLAY STYLES (THE MISSING LINK) */
         .modal-screen {
-            display: none; /* Controlled by openModal / closeModal */
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
@@ -147,11 +130,6 @@
             margin-bottom: 20px;
         }
 
-        .modal-header h3 {
-            margin: 0;
-        }
-
-        /* Form Controls */
         form input, form select, form textarea {
             width: 100%;
             padding: 12px;
@@ -163,20 +141,26 @@
             box-sizing: border-box;
         }
 
-        form input:focus, form select:focus {
-            outline: 2px solid var(--primary);
+        .grid-classes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .class-box {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
         }
     </style>
 
     <script>
         function openModal(modalId) {
-            console.log("Triggering modal open for ID:", modalId);
             var m = document.getElementById(modalId);
-            if (m) {
-                m.style.display = "flex";
-            } else {
-                alert("Error: Modal program/container missing: " + modalId);
-            }
+            if (m) m.style.display = "flex";
         }
 
         function closeModal(btn) {
@@ -197,9 +181,9 @@
 
     <!-- TOP NAVIGATION -->
     <nav class="glass-card navbar">
-        <div class="nav-brand">
+        <div style="display: flex; align-items: center; gap: 10px;">
             <span style="font-size: 1.6rem;">🇳🇬 🏫</span>
-            <h2>Priceless Grace Academy</h2>
+            <h2>Priceless Grace Academy Model Primary School</h2>
         </div>
         <div style="display: flex; gap: 10px;">
             <button class="btn-primary" onclick="openModal('modal-login')">Sign In</button>
@@ -209,10 +193,12 @@
 
     <!-- LANDING HERO PAGE -->
     <main style="padding: 0 15px 30px 15px; max-width: 1100px; margin: 0 auto;">
+        
+        <!-- Hero Section -->
         <section class="glass-card hero-card">
             <h1 class="hero-title">Nurturing Tomorrow's Leaders Today</h1>
             <p class="hero-subtitle">
-                Welcome to Priceless Grace Academy Model Primary School. We offer world-class primary education, moral foundation, and technological literacy.
+                Welcome to Priceless Grace Academy Model Primary School. We offer world-class primary education, moral foundation, and technological literacy for children across Nigeria.
             </p>
             <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 25px;">
                 <button class="btn-primary" onclick="openModal('modal-register')" style="padding: 12px 28px;">Enroll Your Child Now</button>
@@ -220,12 +206,49 @@
             </div>
         </section>
 
-        <!-- SCHOOL INFORMATION CARD -->
+        <!-- Classes Offered Section -->
         <section class="glass-card">
-            <h3 style="color: #f59e0b; margin-top: 0;">📍 School Information & Enquiries</h3>
-            <p><strong>Address:</strong> Winners, Atan, Ogun State, Nigeria</p>
-            <p><strong>Phone:</strong> 07042695260</p>
-            <p><strong>Email:</strong> pricelessgraceacademy@gmail.com</p>
+            <h3 style="color: #10b981; margin-top:0;">📚 Academic Classes Offered</h3>
+            <p style="color: #cbd5e1; font-size: 0.95rem;">
+                Our curriculum covers foundational early childhood education up to secondary transition levels in line with the Nigerian Educational Research and Development Council (NERDC):
+            </p>
+            <div class="grid-classes">
+                <div class="class-box">
+                    <h4 style="color:#f59e0b; margin: 0 0 5px 0;">Creche & KG</h4>
+                    <span style="font-size: 0.85rem; color:#94a3b8;">Early Childhood Care</span>
+                </div>
+                <div class="class-box">
+                    <h4 style="color:#38bdf8; margin: 0 0 5px 0;">Nursery 1 & 2</h4>
+                    <span style="font-size: 0.85rem; color:#94a3b8;">Foundational Phonics & Numeracy</span>
+                </div>
+                <div class="class-box">
+                    <h4 style="color:#10b981; margin: 0 0 5px 0;">Primary 1 - 3</h4>
+                    <span style="font-size: 0.85rem; color:#94a3b8;">Lower Basic Education</span>
+                </div>
+                <div class="class-box">
+                    <h4 style="color:#a855f7; margin: 0 0 5px 0;">Primary 4 - 6</h4>
+                    <span style="font-size: 0.85rem; color:#94a3b8;">Middle Basic & Common Entrance</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCHOOL CONTACT & ENQUIRIES -->
+        <section class="glass-card">
+            <h3 style="color: #f59e0b; margin-top: 0;">📍 School Contact & Official Enquiries</h3>
+            <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between;">
+                <div>
+                    <strong>School Campus Address:</strong>
+                    <p style="color: #cbd5e1; margin: 5px 0 0 0;">Winners, Atan, Ogun State, Nigeria</p>
+                </div>
+                <div>
+                    <strong>Phone Enquiries:</strong>
+                    <p style="color: #cbd5e1; margin: 5px 0 0 0;">07042695260</p>
+                </div>
+                <div>
+                    <strong>Official Email:</strong>
+                    <p style="color: #cbd5e1; margin: 5px 0 0 0;">pricelessgraceacademy@gmail.com</p>
+                </div>
+            </div>
         </section>
     </main>
 
@@ -234,14 +257,14 @@
         <div class="modal-content-wrapper">
             <div class="glass-card">
                 <div class="modal-header">
-                    <h3 style="color: #10b981;">🟢 Account Registration</h3>
+                    <h3 style="color: #10b981; margin: 0;">🟢 Student / Teacher Registration</h3>
                     <button class="btn-close" onclick="closeModal(this)">✕</button>
                 </div>
                 <form id="form-register">
                     <input type="text" name="full_name" placeholder="Full Name" required>
-                    <input type="text" name="username" placeholder="Username" required>
+                    <input type="text" name="username" placeholder="Choose Username" required>
                     <input type="email" name="email" placeholder="Email Address" required>
-                    <input type="password" name="password" placeholder="Password" required>
+                    <input type="password" name="password" placeholder="Choose Password" required>
                     
                     <label style="font-size: 0.85rem; color: #f59e0b; font-weight: 600;">Account Type:</label>
                     <select name="role" id="reg-role" onchange="toggleRolePin()">
@@ -250,10 +273,10 @@
                     </select>
 
                     <div id="pin-container" style="display: none;">
-                        <input type="password" name="teacher_pin" placeholder="Enter Teacher PIN Passkey">
+                        <input type="password" name="teacher_pin" placeholder="Enter Teacher Passkey PIN">
                     </div>
 
-                    <button type="submit" class="btn-primary" style="width:100%; margin-top: 10px;">Create Account</button>
+                    <button type="submit" class="btn-primary" style="width:100%; margin-top: 10px;">Create Portal Account</button>
                 </form>
             </div>
         </div>
@@ -264,11 +287,11 @@
         <div class="modal-content-wrapper">
             <div class="glass-card">
                 <div class="modal-header">
-                    <h3 style="color: #3b82f6;">🔵 Portal Sign In</h3>
+                    <h3 style="color: #3b82f6; margin: 0;">🔵 Portal Sign In</h3>
                     <button class="btn-close" onclick="closeModal(this)">✕</button>
                 </div>
                 <form id="form-login">
-                    <input type="email" name="email" placeholder="Registered Email / Username" required>
+                    <input type="text" name="identifier" placeholder="Username or Email Address" required>
                     <input type="password" name="password" placeholder="Password" required>
                     <button type="submit" class="btn-secondary" style="width:100%; margin-top: 10px;">Login to Portal</button>
                 </form>
@@ -281,7 +304,7 @@
         <div class="modal-content-wrapper" style="max-width: 600px;">
             <div class="glass-card">
                 <div class="modal-header">
-                    <h3>🎓 Student Dashboard</h3>
+                    <h3 style="color: #10b981; margin:0;">🎓 Student Dashboard</h3>
                     <button class="btn-close" onclick="closeModal(this)">✕</button>
                 </div>
                 <p>Welcome to Priceless Grace Academy Student Portal!</p>
@@ -294,7 +317,7 @@
         <div class="modal-content-wrapper" style="max-width: 600px;">
             <div class="glass-card">
                 <div class="modal-header">
-                    <h3>👑 Admin / Teacher Portal</h3>
+                    <h3 style="color: #f59e0b; margin:0;">👑 Admin / Teacher Portal</h3>
                     <button class="btn-close" onclick="closeModal(this)">✕</button>
                 </div>
                 <p>Welcome, Teacher/Admin!</p>
@@ -311,6 +334,7 @@
                     e.preventDefault();
                     var formData = new FormData(regForm);
                     var payload = {
+                        full_name: formData.get("full_name"),
                         username: formData.get("username"),
                         email: formData.get("email"),
                         password: formData.get("password"),
@@ -328,6 +352,7 @@
                             alert("Account created successfully! You can now sign in.");
                             document.getElementById("modal-register").style.display = "none";
                             regForm.reset();
+                            openModal("modal-login");
                         } else {
                             alert("Registration failed: " + (data.message || "Error"));
                         }
@@ -345,8 +370,7 @@
                     e.preventDefault();
                     var formData = new FormData(loginForm);
                     var payload = {
-                        username: formData.get("email"),
-                        email: formData.get("email"),
+                        identifier: formData.get("identifier"),
                         password: formData.get("password")
                     };
 
