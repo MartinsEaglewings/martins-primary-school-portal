@@ -84,7 +84,7 @@ function logout() {
     window.location.reload();
 }
 
-/* ANNOUNCEMENTS LOGIC */
+/* PUBLIC ANNOUNCEMENTS */
 async function loadPublicAnnouncements() {
     try {
         const res = await fetch('/api/announcements');
@@ -105,6 +105,7 @@ async function loadPublicAnnouncements() {
     } catch (err) {}
 }
 
+/* POST / DELETE LOGIC */
 async function postAnnouncement(e) {
     e.preventDefault();
     const title = document.getElementById('annTitle').value.trim();
@@ -142,7 +143,6 @@ async function deleteAnnouncement(id) {
     }
 }
 
-/* ASSIGNMENTS LOGIC */
 async function postAssignment(e) {
     e.preventDefault();
     const title = document.getElementById('assTitle').value.trim();
@@ -180,11 +180,10 @@ async function deleteAssignment(id) {
     }
 }
 
-/* DASHBOARD DATA LOADERS */
+/* ADMIN DASHBOARD LOAD */
 async function loadAdminData() {
     loadPublicAnnouncements();
 
-    // Render Admin Announcements List with Delete buttons
     try {
         const resAnn = await fetch('/api/announcements');
         const annData = await resAnn.json();
@@ -209,7 +208,6 @@ async function loadAdminData() {
         }
     } catch (err) {}
 
-    // Render Admin Assignments List with Delete buttons
     try {
         const resAss = await fetch('/api/assignments');
         const assData = await resAss.json();
@@ -235,8 +233,29 @@ async function loadAdminData() {
     } catch (err) {}
 }
 
+/* STUDENT DASHBOARD LOAD (UPDATED) */
 async function loadStudentData() {
     loadPublicAnnouncements();
+
+    // Render Student Announcements List
+    try {
+        const resAnn = await fetch('/api/announcements');
+        const annData = await resAnn.json();
+        const annContainer = document.getElementById('studentAnnouncements');
+        if (annContainer) {
+            if (annData.length === 0) {
+                annContainer.innerHTML = '<p class="text-muted small">No announcements posted yet.</p>';
+            } else {
+                annContainer.innerHTML = annData.map(a => `
+                    <div class="card card-custom p-3 mb-2 border-red-header">
+                        <h6 class="fw-bold text-danger mb-1">${a.title}</h6>
+                        <p class="small mb-1 text-secondary">${a.content}</p>
+                        <small class="text-muted" style="font-size: 0.75rem;"><i class="far fa-clock me-1"></i>${a.created_at || ''}</small>
+                    </div>
+                `).join('');
+            }
+        }
+    } catch (err) {}
 
     // Render Student Assignments List
     try {
