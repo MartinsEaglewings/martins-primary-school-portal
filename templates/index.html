@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Priceless Grace Academy - Primary School Portal</title>
+    <title>Priceless Grace International School - Portal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -22,7 +22,6 @@
             color: #1e293b;
         }
 
-        /* Smooth Transitions */
         * {
             transition: all 0.25s ease-in-out;
         }
@@ -33,11 +32,32 @@
             border-bottom: 4px solid var(--primary-green);
         }
 
+        .school-logo-nav {
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+            background: #ffffff;
+            border-radius: 50%;
+            padding: 2px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        .school-logo-hero {
+            width: 140px;
+            height: 140px;
+            object-fit: contain;
+            background: #ffffff;
+            border-radius: 50%;
+            padding: 5px;
+            box-shadow: 0 8px 22px rgba(0,0,0,0.3);
+            border: 3px solid var(--accent-gold);
+        }
+
         /* Hero Section */
         .hero-section {
             background: linear-gradient(135deg, var(--dark-red) 0%, var(--primary-red) 50%, var(--dark-green) 100%);
             color: white;
-            padding: 70px 0 90px 0;
+            padding: 50px 0 70px 0;
             border-bottom-left-radius: 35px;
             border-bottom-right-radius: 35px;
             box-shadow: 0 10px 25px rgba(220, 38, 38, 0.25);
@@ -46,8 +66,8 @@
         /* Auth Cards */
         .auth-card {
             max-width: 460px;
-            margin: -50px auto 40px auto;
-            padding: 35px;
+            margin: -40px auto 40px auto;
+            padding: 30px;
             border-radius: 20px;
             box-shadow: 0 12px 30px rgba(0,0,0,0.12);
             background: #ffffff;
@@ -77,16 +97,12 @@
             color: white;
         }
 
-        /* Cards & Components */
+        /* Cards & Badges */
         .card-custom {
             border: 1px solid #e2e8f0;
             border-radius: 16px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.04);
             background: #ffffff;
-        }
-        .card-custom:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 25px rgba(22, 163, 74, 0.15);
         }
 
         .section-title {
@@ -105,15 +121,15 @@
             border-radius: 2px;
         }
 
-        /* Class Badge */
         .class-badge {
             background: var(--light-green);
             color: var(--dark-green);
             border: 1px solid var(--primary-green);
             border-radius: 12px;
-            padding: 15px;
+            padding: 15px 10px;
             text-align: center;
             font-weight: bold;
+            font-size: 0.95rem;
         }
         .class-badge:hover {
             background: var(--primary-green);
@@ -121,7 +137,6 @@
             cursor: pointer;
         }
 
-        /* Dashboard Container */
         .dashboard-container {
             max-width: 1140px;
             margin: 30px auto;
@@ -140,8 +155,9 @@
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom shadow-sm sticky-top">
         <div class="container">
-            <a class="navbar-brand fw-bold fs-4" href="#">
-                <i class="fas fa-school me-2 text-warning"></i>Priceless Grace Academy
+            <a class="navbar-brand fw-bold fs-4 d-flex align-items-center gap-2" href="#">
+                <img src="/static/images/logo.png" alt="PGIS Badge" class="school-logo-nav" onerror="this.style.display='none'">
+                <span>Priceless Grace</span>
             </a>
             <div class="ms-auto" id="navAuthButtons">
                 <button class="btn btn-outline-light btn-sm me-2 fw-bold" onclick="showView('loginView')">Sign In</button>
@@ -157,10 +173,13 @@
     <!-- HERO SECTION -->
     <div id="landingHero" class="hero-section text-center">
         <div class="container">
-            <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold mb-3">🇳🇬 Approved Nigerian Primary School Curriculum</span>
-            <h1 class="display-4 fw-bold" id="schoolHeader">Priceless Grace Academy</h1>
-            <p class="lead mb-3">Nurturing Young Minds • Excellence in Primary Education & Moral Leadership</p>
-            <p class="small text-light opacity-90">
+            <div class="mb-3">
+                <img src="/static/images/logo.png" alt="Priceless Grace International School Badge" class="school-logo-hero" onerror="this.src='https://via.placeholder.com/140?text=PGIS'">
+            </div>
+            <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold mb-3">🇳🇬 Excellence & Godly Leadership</span>
+            <h1 class="display-5 fw-bold" id="schoolHeader">Priceless Grace International School</h1>
+            <p class="lead mb-2">Nurturing Young Minds • Knowledge • Innovation • Global Perspective</p>
+            <p class="small text-light opacity-90 mb-0">
                 <i class="fas fa-map-marker-alt me-1 text-warning"></i> Winners, Atan, Ogun State &nbsp;|&nbsp; 
                 <i class="fas fa-phone me-1 text-warning"></i> 07042695260 &nbsp;|&nbsp; 
                 <i class="fab fa-whatsapp me-1 text-warning"></i> 07042695260
@@ -170,9 +189,9 @@
 
     <div class="container">
 
-        <!-- LANDING PAGE OVERVIEW SECTION -->
+        <!-- LANDING VIEW -->
         <div id="landingView">
-            <!-- AUTH FORMS (OVERLAID ON LANDING) -->
+            <!-- LOGIN VIEW -->
             <div id="loginView" class="auth-card">
                 <h4 class="text-center fw-bold text-danger mb-3"><i class="fas fa-user-lock me-2"></i>Portal Sign In</h4>
                 <form onsubmit="handleLogin(event)">
@@ -189,6 +208,7 @@
                 <p class="text-center mt-3 mb-0 small">Need an account? <a href="#" onclick="showView('registerView')" class="text-danger fw-bold">Create Account</a></p>
             </div>
 
+            <!-- REGISTER VIEW -->
             <div id="registerView" class="auth-card" style="display: none;">
                 <h4 class="text-center fw-bold text-success mb-3"><i class="fas fa-user-plus me-2"></i>Register Student/Teacher</h4>
                 <form onsubmit="handleRegister(event)">
@@ -212,7 +232,6 @@
                         </select>
                     </div>
 
-                    <!-- TEACHER/ADMIN PIN CODE SECTION -->
                     <div class="mb-3" id="adminPinGroup" style="display: none;">
                         <label class="form-label small fw-bold text-danger"><i class="fas fa-key me-1"></i>Teacher Passcode Required</label>
                         <input type="password" id="regAdminPin" class="form-control border-danger" placeholder="Enter Teacher Security PIN">
@@ -223,15 +242,25 @@
                 <p class="text-center mt-3 mb-0 small">Already registered? <a href="#" onclick="showView('loginView')" class="text-success fw-bold">Sign In</a></p>
             </div>
 
-            <!-- NIGERIA PRIMARY SCHOOL CLASSES SECTION -->
+            <!-- CLASSES SECTION: NURSERY, KINDERGARTEN & YEAR 1 TO YEAR 6 -->
             <div class="text-center my-5">
-                <h3 class="section-title mb-4">Classes & Primary Education</h3>
+                <h3 class="section-title mb-4">Early Years Education</h3>
+                <div class="row g-3 justify-content-center mb-4">
+                    <div class="col-6 col-md-3">
+                        <div class="class-badge"><i class="fas fa-shapes d-block fs-3 mb-1"></i>Nursery</div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="class-badge"><i class="fas fa-baby d-block fs-3 mb-1"></i>Kindergarten</div>
+                    </div>
+                </div>
+
+                <h3 class="section-title mb-4">Primary Education</h3>
                 <div class="row g-3">
                     <div class="col-6 col-md-2">
                         <div class="class-badge"><i class="fas fa-child d-block fs-3 mb-1"></i>Year 1</div>
                     </div>
                     <div class="col-6 col-md-2">
-                        <div class="class-badge"><i class="fas fa-shapes d-block fs-3 mb-1"></i>Year 2</div>
+                        <div class="class-badge"><i class="fas fa-book-open d-block fs-3 mb-1"></i>Year 2</div>
                     </div>
                     <div class="col-6 col-md-2">
                         <div class="class-badge"><i class="fas fa-book-reader d-block fs-3 mb-1"></i>Year 3</div>
@@ -248,9 +277,9 @@
                 </div>
             </div>
 
-            <!-- PRIMARY CURRICULUM SUBJECTS -->
+            <!-- CORE SUBJECTS -->
             <div class="my-5 p-4 rounded-4" style="background-color: var(--light-green); border: 2px solid var(--primary-green);">
-                <h3 class="fw-bold text-success text-center mb-4"><i class="fas fa-book-open me-2"></i>Core Primary Subjects</h3>
+                <h3 class="fw-bold text-success text-center mb-4"><i class="fas fa-book-open me-2"></i>Core Primary Curriculum</h3>
                 <div class="row g-3">
                     <div class="col-md-3">
                         <div class="card card-custom p-3 border-green-header">
@@ -296,7 +325,6 @@
             </div>
 
             <div class="row">
-                <!-- Post Announcement Form -->
                 <div class="col-md-6 mb-4">
                     <div class="card card-custom p-4 border-red-header">
                         <h5 class="fw-bold text-danger mb-3"><i class="fas fa-bullhorn me-2"></i>Post New Announcement</h5>
@@ -312,7 +340,6 @@
                     </div>
                 </div>
 
-                <!-- Create Assignment Form -->
                 <div class="col-md-6 mb-4">
                     <div class="card card-custom p-4 border-green-header">
                         <h5 class="fw-bold text-success mb-3"><i class="fas fa-tasks me-2"></i>Create New Homework / Assignment</h5>
@@ -368,7 +395,7 @@
 
     <!-- FOOTER -->
     <footer class="text-center py-4 text-white mt-5" style="background: linear-gradient(135deg, var(--dark-green) 0%, var(--dark-red) 100%);">
-        <p class="mb-1 fw-bold">🇳🇬 Priceless Grace Academy Primary School</p>
+        <p class="mb-1 fw-bold">🇳🇬 Priceless Grace International School</p>
         <p class="small text-light mb-0">Winners, Atan, Ogun State | Phone: 07042695260</p>
     </footer>
 
