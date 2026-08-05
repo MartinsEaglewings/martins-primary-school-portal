@@ -13,8 +13,13 @@ app = Flask(__name__,
 
 CORS(app)
 
+def get_db_connection():
+    conn = sqlite3.connect(DB_PATH, timeout=10)
+    conn.row_factory = sqlite3.Row
+    return conn
+
 def init_db():
-    conn = sqlite3.connect(DB_PATH)
+    conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS users (
@@ -65,7 +70,7 @@ def register():
         return jsonify({'error': 'Username and password required'}), 400
 
     try:
-        conn = sqlite3.connect(DB_PATH)
+        conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)",
                        (username, email, password, role))
@@ -84,7 +89,7 @@ def login():
     identifier = data.get('identifier')
     password = data.get('password')
 
-    conn = sqlite3.connect(DB_PATH)
+    conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute("SELECT id, username, email, role FROM users WHERE (username=? OR email=?) AND password=?",
                    (identifier, identifier, password))
@@ -94,10 +99,10 @@ def login():
     if user:
         return jsonify({
             'user': {
-                'id': user[0],
-                'username': user[1],
-                'email': user[2],
-                'role': user[3]
+                'id': user['id'],
+                'username': user['username'],
+                'email': user['email'],
+                'role': user['role']
             }
         }), 200
     else:
@@ -106,7 +111,7 @@ def login():
 # --- ANNOUNCEMENTS API ---
 @app.route('/api/announcements', methods=['GET', 'POST'])
 def announcements():
-    conn = sqlite3.connect(DB_PATH)
+    conn = get_db_connection()
     cursor = conn.cursor()
     if request.method == 'POST':
         data = request.get_json()
@@ -119,11 +124,11 @@ def announcements():
     cursor.execute("SELECT id, title, content, created_at FROM announcements ORDER BY id DESC")
     rows = cursor.fetchall()
     conn.close()
-    return jsonify([{'id': r[0], 'title': r[1], 'content': r[2], 'created_at': r[3]} for r in rows]), 200
+    return jsonify([{'id': r['id'], 'title': r['title'], 'content': r['content'], 'created_at': r['created_at']} for r in rows]), 200
 
 @app.route('/api/announcements/<int:ann_id>', methods=['DELETE'])
 def delete_announcement(ann_id):
-    conn = sqlite3.connect(DB_PATH)
+    conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute("DELETE FROM announcements WHERE id = ?", (ann_id,))
     conn.commit()
@@ -133,7 +138,7 @@ def delete_announcement(ann_id):
 # --- ASSIGNMENTS API ---
 @app.route('/api/assignments', methods=['GET', 'POST'])
 def assignments():
-    conn = sqlite3.connect(DB_PATH)
+    conn = get_db_connection()
     cursor = conn.cursor()
     if request.method == 'POST':
         data = request.get_json()
@@ -146,11 +151,11 @@ def assignments():
     cursor.execute("SELECT id, title, description, created_at FROM assignments ORDER BY id DESC")
     rows = cursor.fetchall()
     conn.close()
-    return jsonify([{'id': r[0], 'title': r[1], 'description': r[2], 'created_at': r[3]} for r in rows]), 200
+    return jsonify([{'id': r['id'], 'title': r['title'], 'description': r['description'], 'created_at': r['created_at']} for r in rows]), 200
 
 @app.route('/api/assignments/<int:ass_id>', methods=['DELETE'])
 def delete_assignment(ass_id):
-    conn = sqlite3.connect(DB_PATH)
+    conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute("DELETE FROM assignments WHERE id = ?", (ass_id,))
     conn.commit()
